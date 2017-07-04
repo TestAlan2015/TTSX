@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from . import views
-urlpatterns = [
 
+urlpatterns = [
+    url(r'^place_order/',views.place_order),
 ]
