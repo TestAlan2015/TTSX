@@ -18,4 +18,8 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^user/',include('ttsxuser.urls')),
+    url(r'^product/',include('ttsxproduct.urls')),
+    url(r'^cart/',include('ttsxcart.urls')),
+    url(r'^orderlist/',include('ttsxorderlist.urls')),
 ]
