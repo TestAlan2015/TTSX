@@ -9,8 +9,11 @@
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
 </head>
 <body>
+	{% block headertop %}
 
-<div class="login_top clearfix">
+	{% endblock headertop %}
+
+	<div class="login_top clearfix">
 		<a href="../product/index.html" class="login_logo"><img src="/static/images/logo02.png"></a>
 	</div>
 
@@ -41,7 +44,7 @@
 		</div>
 	</div>
 
-	{% endblock %}
+	{% endblock centerbody %}
 
 	
 </body>
