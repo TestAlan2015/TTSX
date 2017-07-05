@@ -2,17 +2,46 @@
 from django.shortcuts import render,redirect
 from models import UserInfo
 from hashlib import sha1
+import datetime
 # Create your views here.
 
 #  登录页面
 def login(request):
-    return render(request,'user/login.html')
+    context={}
+    context['username']=request.COOKIES['username']
+    return render(request,'user/login.html',context)
+
+def login_handle(request):
+    post=request.POST
+    username=post['username']
+    pwd = post['pwd']
+    remember=post.get('remember',0)
+    s1=sha1()
+    s1.update(pwd)
+    pwd=s1.hexdigest()
+
+    context={}
+    user=UserInfo.objects.filter(uname=username)
+    if user.count()>0:
+        if pwd==user[0].upassword:
+            #request.setsession('uid',username) #设置用户的回话
+            response =redirect('/user/info')
+            if remember=='1':
+                response.set_cookie('username',username,expires=datetime.datetime.now()+datetime.timedelta(14))
+            return response
+        else:
+            context['pwd_error']='密码错误'
+            return render(request, 'user/login.html',context)
+    else:
+        context['user_error'] = '用户名错误'
+        return render(request,'user/login.html',context)
+
 
 #  注册页面，已加入了初步的表单验证效果，
 def register(request):
     return render(request,'user/register.html')
 
-# 页面处理类
+# 注册处理类
 def user_register_handle(request):
     post= request.POST
     user_name=post['user_name']

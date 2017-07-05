@@ -7,6 +7,17 @@
 	<title>天天生鲜-登录</title>
 	<link rel="stylesheet" type="text/css" href="/static/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+	<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			if('{{user_error}}'!=''){
+				$('#user_error').show()
+			}
+			if('{{pwd_error}}'!=''){
+				$('#pwd_error').show()
+			}
+        })
+	</script>
 </head>
 <body>
 	{% block headertop %}
@@ -27,17 +38,18 @@
 					<a href="/user/register">立即注册</a>
 				</div>
 				<div class="form_input">
-					<form action="/user/login_handle" method="post">
-						<input type="text" name="username" class="name_input" placeholder="请输入用户名">
-						<div class="user_error">输入错误</div>
+					<form action="/user/login_handle/" method="post">
+						{% csrf_token %}
+						<input type="text" name="username" class="name_input" value="{{username}}" placeholder="请输入用户名">
+						<div class="user_error" id="user_error">{{user_error}}</div>
 						<input type="password" name="pwd" class="pass_input" placeholder="请输入密码">
-						<div class="pwd_error">输入错误</div>
+						<div class="pwd_error" id="pwd_error">{{pwd_error}}</div>
 						<div class="more_input clearfix">
-							<input type="checkbox" name="">
+							<input type="checkbox" name="remember" value="1" checked="checked">
 							<label>记住用户名</label>
 							<a href="#">忘记密码</a>
 						</div>
-						<input type="submit" name="" value="登录" class="input_submit">
+						<input type="submit" value="登录" class="input_submit">
 					</form>
 				</div>
 			</div>
