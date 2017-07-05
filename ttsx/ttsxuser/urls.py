@@ -6,4 +6,6 @@ urlpatterns = [
     url(r'^info/$',views.info),
     url(r'^order/$', views.order),
     url(r'^site/$', views.site),
+    url(r'^register_handle/$',views.user_register_handle),
+
 ]
