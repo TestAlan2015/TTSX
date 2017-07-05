@@ -3,6 +3,7 @@ from django.shortcuts import render,redirect
 from models import UserInfo
 from hashlib import sha1
 import datetime
+from django.http import JsonResponse
 # Create your views here.
 
 #  登录页面
@@ -10,6 +11,15 @@ def login(request):
     context={}
     context['username']=request.COOKIES['username']
     return render(request,'user/login.html',context)
+
+# 处理用户名异步注册的时候存在问题
+def isvalid(request):
+    count=UserInfo.objects.filter(uname=request.GET['username']).count()
+    if count>0:
+        return JsonResponse({'flag':1})
+    elif count==0:
+        return  JsonResponse({'flag':0})
+
 
 def login_handle(request):
     post=request.POST

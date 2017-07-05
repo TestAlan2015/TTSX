@@ -27,6 +27,16 @@
 				$('#error_allow').show()
 			}
 
+			$('#user_name').blur(function () {
+				$.get('/user/isvalid',{'username':$('#user_name').val()},function (data) {
+					if (data.flag==0){
+						$('#error_name').hide()
+					}else if(data.flag==1){
+						$('#error_name').html("用户名非法！").show()
+					}
+                })
+            })
+
         })
 	</script>
 </head>
