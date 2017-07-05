@@ -6,9 +6,18 @@ import datetime
 from django.http import JsonResponse
 # Create your views here.
 
+
+def islogin(func):
+    def new_func(request):
+        uname = request.session.get('uname')
+        if uname==None:
+            return redirect('/user/login')
+        return func(request)
+    return new_func
+
 #  登录页面
 def login(request):
-    context={}
+    context={'top':0}
     context['username']=request.COOKIES['username']
     return render(request,'user/login.html',context)
 
@@ -19,7 +28,6 @@ def isvalid(request):
         return JsonResponse({'flag':1})
     elif count==0:
         return  JsonResponse({'flag':0})
-
 
 
 # 用户的登陆验证
@@ -51,7 +59,8 @@ def login_handle(request):
 
 #  注册页面，已加入了初步的表单验证效果，
 def register(request):
-    return render(request,'user/register.html')
+    context = {'top': 0}
+    return render(request,'user/register.html',context)
 
 # 注册处理类
 def user_register_handle(request):
@@ -90,21 +99,28 @@ def user_register_handle(request):
 
 
 #  user_center_info.html 用户中心-用户信息页 用户中心功能一，查看用户的基本信息
+@islogin
 def info(request):
-    return render(request,'user/user_center_info.html')
+    username = request.session.get('uname')
+    return render(request,'user/user_center_info.html',{'username':username})
+
+
 
 #  user_center_order.html 用户中心-用户订单页 用户中心功能二，查看用户的全部订单
+@islogin
 def order(request):
-    return render(request,'user/user_center_order.html')
+    username = request.session.get('uname')
+    return render(request,'user/user_center_order.html',{'username':username})
 
 #  user_center_site.html 用户中心-用户收货地址页 用户中心功能三，查看和设置用户的收货地址
+@islogin
 def site(request):
     method=request.method
-    uname = request.session.get('uname')
-    user = UserInfo.objects.get(uname=uname)
+    username = request.session.get('uname')
+    user = UserInfo.objects.get(uname=username)
 
     if method=='GET':
-        return render(request, 'user/user_center_site.html',{'user':user})
+        return render(request, 'user/user_center_site.html',{'user':user,'username':username})
     elif method=='POST':
         post = request.POST
         receiver = post['receiver']
