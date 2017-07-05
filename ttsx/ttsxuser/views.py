@@ -21,6 +21,8 @@ def isvalid(request):
         return  JsonResponse({'flag':0})
 
 
+
+# 用户的登陆验证
 def login_handle(request):
     post=request.POST
     username=post['username']
@@ -34,7 +36,7 @@ def login_handle(request):
     user=UserInfo.objects.filter(uname=username)
     if user.count()>0:
         if pwd==user[0].upassword:
-            #request.setsession('uid',username) #设置用户的回话
+            request.session['uname']=user[0].uname #设置用户的回话
             response =redirect('/user/info')
             if remember=='1':
                 response.set_cookie('username',username,expires=datetime.datetime.now()+datetime.timedelta(14))
@@ -97,5 +99,21 @@ def order(request):
 
 #  user_center_site.html 用户中心-用户收货地址页 用户中心功能三，查看和设置用户的收货地址
 def site(request):
-    return render(request,'user/user_center_site.html')
+    method=request.method
+    uname = request.session.get('uname')
+    user = UserInfo.objects.get(uname=uname)
 
+    if method=='GET':
+        return render(request, 'user/user_center_site.html',{'user':user})
+    elif method=='POST':
+        post = request.POST
+        receiver = post['receiver']
+        address = post['address']
+        code = post['code']
+        phone = post['phone']
+        user.ureveiver=receiver
+        user.address = address
+        user.ucode = code
+        user.uphone = phone
+        user.save()
+        return redirect('/user/site/')

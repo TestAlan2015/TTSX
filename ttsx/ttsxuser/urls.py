@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^register_handle/$',views.user_register_handle),
     url(r'^login_handle/$',views.login_handle),
     url(r'^isvalid/$',views.isvalid),
+
 ]
