@@ -5,21 +5,19 @@ from hashlib import sha1
 import datetime
 from django.http import JsonResponse
 # Create your views here.
+from . import user_decorator
 
-
-def islogin(func):
-    def new_func(request):
-        uname = request.session.get('uname')
-        if uname==None:
-            return redirect('/user/login')
-        return func(request)
-    return new_func
 
 #  登录页面
 def login(request):
     context={'top':0}
     context['username']=request.COOKIES['username']
     return render(request,'user/login.html',context)
+
+#  登录页面
+def loginout(request):
+    request.session.flush()
+    return redirect('/user/login')
 
 # 处理用户名异步注册的时候存在问题
 def isvalid(request):
@@ -44,8 +42,9 @@ def login_handle(request):
     user=UserInfo.objects.filter(uname=username)
     if user.count()>0:
         if pwd==user[0].upassword:
+            request.session['uid']=user[0].id
             request.session['uname']=user[0].uname #设置用户的回话
-            response =redirect('/user/info')
+            response =redirect(request.session.get('path','/product/index'))
             if remember=='1':
                 response.set_cookie('username',username,expires=datetime.datetime.now()+datetime.timedelta(14))
             return response
@@ -99,7 +98,7 @@ def user_register_handle(request):
 
 
 #  user_center_info.html 用户中心-用户信息页 用户中心功能一，查看用户的基本信息
-@islogin
+@user_decorator.islogin
 def info(request):
     username = request.session.get('uname')
     return render(request,'user/user_center_info.html',{'username':username})
@@ -107,13 +106,13 @@ def info(request):
 
 
 #  user_center_order.html 用户中心-用户订单页 用户中心功能二，查看用户的全部订单
-@islogin
+@user_decorator.islogin
 def order(request):
     username = request.session.get('uname')
     return render(request,'user/user_center_order.html',{'username':username})
 
 #  user_center_site.html 用户中心-用户收货地址页 用户中心功能三，查看和设置用户的收货地址
-@islogin
+@user_decorator.islogin
 def site(request):
     method=request.method
     username = request.session.get('uname')
