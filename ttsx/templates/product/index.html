@@ -55,6 +55,37 @@
 		</div>
 	</div>
 
+	{% for dic in list %}
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model0{{forloop.counter}}">{{dic.t.ttitle}}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for hot in dic.hotlist%}
+				<a href="#">{{hot.pname|truncatechars:10}}</a>
+				{% endfor %}
+			</div>
+			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner0{{forloop.counter}}.jpg"></div>
+			<ul class="goods_list fl">
+				{% for new in dic.newlist%}
+				<li>
+					<h4><a href="#">{{new.pname}}</a></h4>
+					<a href="#"><img src="/static/{{new.pimage}}"></a>
+					<div class="prize">¥ {{new.pprice}}</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	{% endfor %}
+
+
+	{% comment %}
 	<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model01">新鲜水果</h3>
@@ -287,6 +318,7 @@
 			</ul>
 		</div>
 	</div>
+	{% endcomment %}
 
 	{% endblock centerbody %}
 	<script type="text/javascript" src="/static/js/slide.js"></script>

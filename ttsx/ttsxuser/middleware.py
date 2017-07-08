@@ -5,5 +5,6 @@ class SavePathMiddleWare:
                                 '/user/logout/',
                                 '/user/register_handle/',
                                 '/user/login_handle/',
-                                '/user/isvalid/',]:
+                                '/user/isvalid/',
+                                '/admin/']:
             request.session['path']=request.get_full_path()

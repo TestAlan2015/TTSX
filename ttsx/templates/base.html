@@ -15,7 +15,7 @@
 				<div class="header">
 					<div class="welcome fl">欢迎来到天天生鲜!</div>
 					<div class="fr">
-						{% if request.session.uid != '' %}
+						{% if request.session.uid %}
 						<div class="login_btn fl" id="login_info">
 							欢迎您：<em>{{request.session.uname}}</em>
 							<span>|</span>

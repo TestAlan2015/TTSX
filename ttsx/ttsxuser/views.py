@@ -11,7 +11,7 @@ from . import user_decorator
 #  登录页面
 def login(request):
     context={'top':0}
-    context['username']=request.COOKIES['username']
+    context['username']=request.COOKIES.get('username','')
     return render(request,'user/login.html',context)
 
 #  登录页面
