@@ -16,11 +16,6 @@ def index(request):
     context['list']=list
     return render(request,'product/index.html',context)
 
-# detail.html  商品详情页，某一件商品的详细信息。
-def detail(request):
-    context = {'pro': '0'}
-    return render(request,'product/detail.html',context)
-
 # list.html  商品列表页，商品分类菜单鼠标悬停时切换显示和隐藏，点击菜单后链接到对应商品的列表页。
 def list(request,pid,index):
     t=TypeInfo.objects.get(pk=int(pid))
@@ -33,3 +28,28 @@ def list(request,pid,index):
     context['t']=t
     # page.
     return render(request,'product/list.html',context)
+
+
+# detail.html  商品详情页，某一件商品的详细信息。
+def detail(request,id):
+    product=ProductInfo.objects.get(pk=int(id))
+    new_list=product.ptype.productinfo_set.order_by('-id')[0:2]
+    context = {'pro': '0'}
+    context['product']=product
+    context['new_list']=new_list
+    return render(request,'product/detail.html',context)
+
+
+
+# list.html  商品列表页，商品分类菜单鼠标悬停时切换显示和隐藏，点击菜单后链接到对应商品的列表页。
+# def list(request,**kwargs):
+#     t=TypeInfo.objects.get(pk=int(kwargs.get('pid',1)))
+#     new_list=t.productinfo_set.order_by('-id')[0:2]
+#     paginator=Paginator(t.productinfo_set.order_by('-id'),15)
+#     page=paginator.page(int(kwargs.get('index')))
+#     context = {'pro': '0'}
+#     context['new_list']=new_list
+#     context['page']=page
+#     context['t']=t
+#     # page.
+#     return render(request,'product/list.html',context)

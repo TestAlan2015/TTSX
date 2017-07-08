@@ -50,8 +50,8 @@
 				<ul>
 					{% for new in new_list%}
 						<li>
-						<a href="/{{new.id}}/"><img src="/static/{{new.pimage}}"></a>
-						<h4><a href="/{{new.id}}/">{{new.pname}}</a></h4>
+						<a href="/product/detail/{{new.id}}/"><img src="/static/{{new.pimage}}"></a>
+						<h4><a href="/product/detail/{{new.id}}/">{{new.pname}}</a></h4>
 						<div class="prize">￥{{new.pprice}}</div>
 					</li>
 					{% endfor %}
@@ -71,8 +71,8 @@
 
 				{% for item in page.object_list%}
 				<li>
-					<a href="/{{item.id}}/"><img src="/static/{{item.pimage}}"></a>
-					<h4><a href="detail.html">{{item.pname}}</a></h4>
+					<a href="/product/detail/{{item.id}}/"><img src="/static/{{item.pimage}}"></a>
+					<h4><a href="/product/detail/{{item.id}}/">{{item.pname}}</a></h4>
 					<div class="operate">
 						<span class="prize">￥{{item.pprice}}</span>
 						<span class="unit">{{item.pprice}}/{{item.punit}}</span>
