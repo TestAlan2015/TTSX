@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^cart/',include('ttsxcart.urls')),
     url(r'^orderlist/',include('ttsxorderlist.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^search/',include('haystack.urls')),
 ]

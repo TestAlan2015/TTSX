@@ -4,6 +4,7 @@ from models import UserInfo
 from hashlib import sha1
 import datetime
 from django.http import JsonResponse
+from ttsxproduct.models import ProductInfo
 # Create your views here.
 from . import user_decorator
 
@@ -100,8 +101,15 @@ def user_register_handle(request):
 #  user_center_info.html 用户中心-用户信息页 用户中心功能一，查看用户的基本信息
 @user_decorator.islogin
 def info(request):
-    username = request.session.get('uname')
-    return render(request,'user/user_center_info.html',{'username':username})
+    ids=request.COOKIES.get('browse_list','').split(',')[:-1]
+    products=[]
+    for id in ids:
+        products.append(ProductInfo.objects.get(pk=int(id)))
+    context={}
+
+    context['username'] = request.session.get('uname')
+    context['products'] = products
+    return render(request,'user/user_center_info.html',context)
 
 
 

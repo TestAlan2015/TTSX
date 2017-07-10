@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'ttsxcart',
     'ttsxorderlist',
     'tinymce',
+    'haystack',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -124,3 +125,21 @@ TINYMCE_DEFAULT_CONFIG = {
     'width': 600,
     'height': 400,
 }
+
+HAYSTACH_CONNECTIONS={
+    'default':{
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        'PAHT':os.path.join(BASE_DIR,'whoosh_index'),
+    }
+}
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        #使用whoosh引擎
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        #索引文件路径
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+#当增加、删除、修改数据的时候自动维护产生索引
+HAYSTACK_SIGNAL_PROCESSOR='haystack.signals.RealtimeSignalProcessor'

@@ -17,27 +17,51 @@ def index(request):
     return render(request,'product/index.html',context)
 
 # list.html  商品列表页，商品分类菜单鼠标悬停时切换显示和隐藏，点击菜单后链接到对应商品的列表页。
-def list(request,pid,index):
+def list(request,pid,index,orderby):
+    desc=request.GET.get('desc')
     t=TypeInfo.objects.get(pk=int(pid))
     new_list=t.productinfo_set.order_by('-id')[0:2]
     paginator=Paginator(t.productinfo_set.order_by('-id'),15)
+    if int(orderby) == 2:
+        if int(desc)==1:
+            paginator = Paginator(t.productinfo_set.order_by('pprice'), 15)
+        else:
+            paginator = Paginator(t.productinfo_set.order_by('-pprice'), 15)
+    elif int(orderby) == 3:
+        paginator = Paginator(t.productinfo_set.order_by('-pclick'), 15)
     page=paginator.page(int(index))
+    #product的头和其他的页面有区别
     context = {'pro': '0'}
     context['new_list']=new_list
     context['page']=page
     context['t']=t
+    context['desc'] = desc
+    context['orderby'] = orderby
     # page.
     return render(request,'product/list.html',context)
 
 
 # detail.html  商品详情页，某一件商品的详细信息。
 def detail(request,id):
+    #保存点击事件
     product=ProductInfo.objects.get(pk=int(id))
+    product.pclick+=1
+    product.save()
+
+    #获取浏览记录而且设置
+    ids=request.COOKIES.get('browse_list','').split(',')
+    if id in ids:
+        ids.remove(id)
+    ids.insert(0,id)
+    if len(ids)>5:
+        ids=ids[0:5]
     new_list=product.ptype.productinfo_set.order_by('-id')[0:2]
     context = {'pro': '0'}
     context['product']=product
     context['new_list']=new_list
-    return render(request,'product/detail.html',context)
+    httpresponse=render(request,'product/detail.html',context)
+    httpresponse.set_cookie('browse_list',','.join(ids),max_age=60*60*24*7)
+    return httpresponse
 
 
 
