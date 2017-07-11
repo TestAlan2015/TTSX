@@ -9,11 +9,43 @@
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
 	<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
 	<script type="text/javascript">
-		$(function () {
-			function add2cart(gid){
+			$(function () {
+			    $.get('/user/islogin/',function (data) {
+					if(data.ok){
+					    $.get('/cart/count/',function (data) {
+							if(data.count) {
+								$('#show_count').text(data.count)
+							}
+                		})
+					}else{
+						alert('please login first');
+                        location.href = '/user/login/'
+					}
+                })
 
-			}
-        })
+            })
+
+			function add2cart(gid) {
+                $.get('/user/islogin', function (data) {
+                    if (data.ok) {
+                        $.get('/cart/add/', {'gid': gid}, function (data) {
+                            if (data.save) {
+                                $.get('/cart/count/',function (data) {
+									if(data.count){
+										$('#show_count').text(data.count)
+									}
+                                })
+                            } else {
+                                alert('operation false please try later!')
+                            }
+                        })
+                    } else {
+                        alert('please login first');
+                        location.href = '/user/login/'
+                    }
+                })
+            }
+
 	</script>
 </head>
 <body>
@@ -85,7 +117,7 @@
 					<div class="operate">
 						<span class="prize">￥{{item.pprice}}</span>
 						<span class="unit">{{item.pprice}}/{{item.punit}}</span>
-						<a href="#" onclick="javascript:add2cart({{item.id}});" class="add_goods" title="加入购物车"></a>
+						<a href="#" onclick="javascript:add2cart('{{item.id}}');" class="add_goods" title="加入购物车"></a>
 					</div>
 				</li>
 				{% endfor%}

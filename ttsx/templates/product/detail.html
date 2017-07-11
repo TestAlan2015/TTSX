@@ -9,7 +9,23 @@
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
 	<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
 	<script type="text/javascript">
+
+
+
 		$(function () {
+		    $.get('/user/islogin/',function (data) {
+					if(data.ok){
+					    $.get('/cart/count/',function (data) {
+							if(data.count) {
+								$('#show_count').text(data.count)
+							}
+                		})
+					}else{
+						alert('please login first');
+                        location.href = '/user/login/'
+					}
+			})
+
 			$('.num_show').blur(function () {
 				num=parseInt($(this).val())
 				if(isNaN(num))
@@ -52,6 +68,46 @@
 //				$('.num_show').blur()
 //            }
 
+			var $add_x = $('#add_cart').offset().top;
+			var $add_y = $('#add_cart').offset().left;
+
+			var $to_x = $('#show_count').offset().top;
+			var $to_y = $('#show_count').offset().left;
+
+			$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+
+			function add2cart() {
+
+				$.get('/user/islogin/',function (data) {
+				    if(data.ok){
+						$.get('/cart/add/',{'gid':$('#gid').val(),'count':$('#count').val()},function (data) {
+							if(data.save){
+							 	$.get('/cart/count/',function (data) {
+									if(data.count){
+									    $('#show_count').text(data.count)
+									}
+                                })
+							}
+                        })
+					}else{
+				        alert('please login first')
+						location.href='/user/login/'
+					}
+
+                })
+
+				$(".add_jump").stop().animate({
+				'left': $to_y+7,
+				'top': $to_x+7},
+				"fast", function() {
+					$(".add_jump").fadeOut('fast',function(){
+
+					});
+
+				});
+
+			}
+			$('#add_cart').click(add2cart)
 
         })
 	</script>
@@ -107,7 +163,8 @@
 			<div class="goods_num clearfix">
 				<div class="num_name fl">数 量：</div>
 				<div class="num_add fl">
-					<input type="text" class="num_show fl" value="1">
+					<input type="hidden" value="{{product.id}}" id="gid">
+					<input type="text" class="num_show fl" value="1" id="count">
 					<input type="hidden" class="hide" value="{{product.pkucun}}">
 					<a href="javascript:;" class="add fr">+</a>
 					<a href="javascript:;" class="minus fr">-</a>
@@ -152,7 +209,6 @@
 
 	{% endblock centerbody %}
 
-	<script type="text/javascript" src="js/jquery-1.12.2.js"></script>
 	<script type="text/javascript">
 		var $add_x = $('#add_cart').offset().top;
 		var $add_y = $('#add_cart').offset().left;
@@ -173,6 +229,6 @@
 			});
 		})
 	</script>
-	
+
 </body>
 </html>

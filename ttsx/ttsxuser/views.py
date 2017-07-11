@@ -15,6 +15,13 @@ def login(request):
     context['username']=request.COOKIES.get('username','')
     return render(request,'user/login.html',context)
 
+def loginin(request):
+    user=request.session['uid']
+    if user is not None:
+        return JsonResponse({'ok':1})
+    else:
+        return JsonResponse({'ok':0})
+
 #  登录页面
 def loginout(request):
     request.session.flush()
