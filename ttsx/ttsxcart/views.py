@@ -39,3 +39,21 @@ def count(request):
     uid=request.session['uid']
     count=CartInfo.objects.all().filter(cuser_id=uid).aggregate(Sum('count')).get('count__sum',0)
     return JsonResponse({'count':count})
+
+#删除从购物车删除 的数据
+def delete(request):
+    gid=request.GET.get('gid')
+    CartInfo.objects.get(pk=int(gid)).delete()
+    return JsonResponse({'ok':1})
+
+
+def update(request):
+    mount=request.GET.get('mount')
+    cartid=request.GET.get('cartid')
+    cart=CartInfo.objects.get(pk=int(cartid))
+    print '------------------'
+    print mount
+    print cartid
+    cart.count=mount
+    cart.save()
+    return JsonResponse({'ok':1})
